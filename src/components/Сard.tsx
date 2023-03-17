@@ -51,7 +51,6 @@ export function Card(props: PropsType) {
 
   const onSaveEditHandler = (id: string, title: string) => {
     props.onEditNoteTitle(id, title);
-    setEditingNoteId(id);
   };
 
   return (
@@ -73,9 +72,9 @@ export function Card(props: PropsType) {
       <div className="flex-auto my-4">
         <input
           type="text"
-          placeholder="Введите текст"
+          placeholder="Write text"
           value={newTaskTitle}
-          className="bg-white outline-slate-800  py-5 px-12 mx-8"
+          className="bg-white outline-slate-800  py-5 px-12 mx-8 text-3xl"
           onChange={onNewTaskChangeHanddler}
           onKeyDown={onClickEnterHandler}
         />
@@ -114,21 +113,45 @@ export function Card(props: PropsType) {
                   onChange={onCheckedHandler}
                 />
                 {t.id === editingNoteId ? (
-                  <input
-                    className="bg-white outline-slate-800  py-5 px-12 mx-8"
-                    value={t.title}
-                    onChange={(e) => onSaveEditHandler(t.id, e.target.value)}
-                  />
+                  <>
+                    <input
+                      className="bg-white outline-slate-800  py-5 px-12 mx-8 text-3xl"
+                      value={t.title}
+                      onChange={(e) => onSaveEditHandler(t.id, e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          t.title.trim() !== ""
+                            ? onEditHandler(t.title)
+                            : onRemoveHandler();
+                        }
+                      }}
+                      style={{
+                        textDecoration: t.isDone ? "line-through" : "none",
+                      }}
+                    />
+                    <button
+                      className="text-3xl bg-lime-400 py-4 px-7 text-white rounded-lg"
+                      onClick={() => {
+                        t.title.trim() !== ""
+                          ? onEditHandler(t.title)
+                          : onRemoveHandler();
+                      }}
+                    >
+                      Save
+                    </button>
+                  </>
                 ) : (
                   <p
                     onClick={() => onEditHandler(t.id)}
-                    className="mt-4 px-2 py-2  text-2xl text-black flex-wrap"
+                    className="mt-4 px-2 py-2  text-3xl text-black flex-wrap"
                   >
                     {t.title}
                   </p>
                 )}
                 <Button onClick={onRemoveHandler} text="X" />
-                <p className="ml-4 text-2xl text-gray-500">{t.date}</p>
+                <p className="ml-4 text-3xl text-gray-500 py-4 px-7 rounded-lg">
+                  {t.date}
+                </p>
               </li>
             );
           })}

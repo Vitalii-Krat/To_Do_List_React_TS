@@ -45,9 +45,12 @@ function App() {
   }
 
   const onEditNoteTitle = (id: string, title: string) => {
-    setTask((prevTasks) =>
-      prevTasks.map((task) => (task.id === id ? { ...task, title } : task))
+    const editedTask = tasks.map((task) =>
+      task.id === id ? { ...task, title } : task
     );
+
+    setTask(editedTask);
+    localStorage.setItem("tasks", JSON.stringify(editedTask));
   };
 
   function changeFilter(value: FilterTypeValue) {
